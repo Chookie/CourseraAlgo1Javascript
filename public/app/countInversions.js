@@ -15,8 +15,8 @@
             outCount += ' ' + pad(i,1) + ' |';
             outValue += ' ' + pad(arr[i],1) + ' |';
         }
-        console.log(outCount);
-        console.log(outValue);
+        if(options.print) console.log(outCount);
+        if(options.print) console.log(outValue);
     };
 
     var merge = function(leftCursor, mid, right){
@@ -28,11 +28,11 @@
         var inv = 0;
 
         while(leftIdx <= leftUpper && rightIdx <= right){
-            if(a[leftIdx] < a[rightIdx]){
+            if(a[leftIdx] <= a[rightIdx]){
                 tmp[tmpIdx++] = a[leftIdx++];
             } else {
                 tmp[tmpIdx++] = a[rightIdx++];
-                inv += leftUpper - leftIdx + 1;
+                inv = inv + (mid - leftIdx) ;
             }
         }
 
@@ -62,12 +62,28 @@
     //mergeSort(0, a.length-1);
     //printAll(a);
 
+
+    var options = {
+        print: false
+    };
+    module.exports.options = options;
+
     module.exports.count = function (array){
         a = array;
         var inv = mergeSort(0, a.length-1);
         printAll(a);
-        console.log(inv);
+        if(options.print) console.log(inv);
         return inv;
-    }
+    };
+
+    module.exports.readArrayFromFile = function (file){
+        var fs = require('fs');
+        //noinspection UnnecessaryLocalVariableJS
+        var array = fs.readFileSync(file).toString()
+            .split("\n")
+            .map(function(item) { return parseInt(item, 10) })
+            .filter(function(e) { return !isNaN(e) });
+        return array;
+    };
 
 }());
